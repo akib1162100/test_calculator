@@ -7,3 +7,8 @@ def divide(a: float, b: float) -> float:  # Define the division backend function
     # if b == 0:  # Detect a denominator for which division is undefined.
     #     raise ValueError("Cannot divide by zero.")  # Report an expected input error.
     return a / b  # Return a floating-point quotient for a valid denominator.
+
+def power(base: float, exponent: int) -> float:
+    # if base == 0 and exponent < 0:
+    #     raise ValueError("Zero cannot have a negative exponent.")
+    return base ** exponent

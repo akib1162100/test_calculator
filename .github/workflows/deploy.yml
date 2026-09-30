@@ -18,15 +18,18 @@ jobs: # Declare the work for GitHub's runner to perform.
       - uses: actions/setup-python@v7 # Install/configure Python on the runner.
         with: # Supply inputs to the setup-python action.
           python-version: "3.12" # Select the Python minor version used for this lesson's CI.
+#      Install Dependencies
       - name: Install dependencies # Label the dependency installation step.
         run: python -m pip install -r requirements.txt # Install the pinned Streamlit version.
-
+#      Syntax action
       - name: Check Python syntax # Baseline CI checks syntax; students add behavioral tests.
         run: python -m compileall -q app.py calculator.py # Compile the two application modules.
-      # STUDENT TASK: insert the Run tests step here, before the deployment step.
+      # TASK: insert the Run tests step here, before the deployment step.
 
+      - name: Run tests
+        run: python -m unittest discover -s . -p "test_*.py" -v
 
-
+#      Render action
       - name: Request Render deployment # Ask the hosting service to deploy this revision.
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' # Never deploy a pull request.
         env: # Expose the secret only to this step as an environment variable.
