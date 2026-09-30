@@ -26,28 +26,28 @@ except ValueError as error:  # Catch the backend's expected validation error.
 
 
 
-st.subheader("Power")  # Label the new operation.
-left, middle, right = st.columns(3)  # Create two input columns and one output column.
-
-base = left.number_input(
-    "Base",  # Visible label for the first input.
-    min_value=-100.0,  # Smallest allowed base.
-    max_value=100.0,  # Largest allowed base.
-    value=2.0,  # Initial base; float arguments allow decimal values.
-    key="power_base",  # Unique identifier for this widget.
-)
-
-exponent = middle.number_input(
-    "Exponent",  # Visible label for the second input.
-    min_value=-10,  # Smallest allowed exponent.
-    max_value=10,  # Largest allowed exponent.
-    value=3,  # Initial exponent; integer arguments select integer input.
-    step=1,  # Increase or decrease by one.
-    key="power_exponent",  # Distinguish this widget from every other input.
-)
-
-try:  # Attempt the operation that can reject invalid inputs.
-    result = power(base, exponent)  # Send the widget values to the backend.
-    right.metric("Power result", f"{result:g}")  # Display the result in the third column.
-except ValueError as error:  # Handle the backend's expected validation error.
-    right.error(str(error))  # Render its message beside the inputs.
+# st.subheader("Power")  # Label the new operation.
+# left, middle, right = st.columns(3)  # Create two input columns and one output column.
+#
+# base = left.number_input(
+#     "Base",  # Visible label for the first input.
+#     min_value=-100.0,  # Smallest allowed base.
+#     max_value=100.0,  # Largest allowed base.
+#     value=2.0,  # Initial base; float arguments allow decimal values.
+#     key="power_base",  # Unique identifier for this widget.
+# )
+#
+# exponent = middle.number_input(
+#     "Exponent",  # Visible label for the second input.
+#     min_value=-10,  # Smallest allowed exponent.
+#     max_value=10,  # Largest allowed exponent.
+#     value=3,  # Initial exponent; integer arguments select integer input.
+#     step=1,  # Increase or decrease by one.
+#     key="power_exponent",  # Distinguish this widget from every other input.
+# )
+#
+# try:  # Attempt the operation that can reject invalid inputs.
+#     result = power(base, exponent)  # Send the widget values to the backend.
+#     right.metric("Power result", f"{result:g}")  # Display the result in the third column.
+# except ValueError as error:  # Handle the backend's expected validation error.
+#     right.error(str(error))  # Render its message beside the inputs.
