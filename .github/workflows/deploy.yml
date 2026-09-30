@@ -1,0 +1,36 @@
+name: CI and deploy # Human-readable name in the GitHub Actions tab.
+
+on: # Declare which repository events start this workflow.
+  push: # Run when commits are pushed.
+    branches: [main] # Only pushes to the main branch trigger this event.
+  pull_request: # Also check proposed changes before merging.
+    branches: [main] # Select pull requests whose destination is main.
+
+permissions: # Limit the workflow's GitHub token permissions.
+  contents: read # Checkout needs to read source code, not write to the repository.
+
+jobs: # Declare the work for GitHub's runner to perform.
+  check-and-deploy: # Give this single job an identifier.
+    runs-on: ubuntu-latest # Use a GitHub-hosted Linux machine.
+    timeout-minutes: 10 # Stop a job that runs unexpectedly long.
+    steps: # Run these steps in order; failures stop subsequent ordinary steps.
+      - uses: actions/checkout@v7 # Download the source for the triggering revision.
+      - uses: actions/setup-python@v7 # Install/configure Python on the runner.
+        with: # Supply inputs to the setup-python action.
+          python-version: "3.12" # Select the Python minor version used for this lesson's CI.
+      - name: Install dependencies # Label the dependency installation step.
+        run: python -m pip install -r requirements.txt # Install the pinned Streamlit version.
+
+      - name: Check Python syntax # Baseline CI checks syntax; students add behavioral tests.
+        run: python -m compileall -q app.py calculator.py # Compile the two application modules.
+      # STUDENT TASK: insert the Run tests step here, before the deployment step.
+
+
+
+      - name: Request Render deployment # Ask the hosting service to deploy this revision.
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' # Never deploy a pull request.
+        env: # Expose the secret only to this step as an environment variable.
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }} # Read the repository's saved hook URL.
+        run: | # Execute the following Bash commands as one script.
+          test -n "$DEPLOY_HOOK" || { echo "Missing RENDER_DEPLOY_HOOK_URL secret"; exit 1; }
+          curl --fail --silent --show-error --max-time 60 --output /dev/null "${DEPLOY_HOOK}&ref=${GITHUB_SHA}"
